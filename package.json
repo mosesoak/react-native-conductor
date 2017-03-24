@@ -1,0 +1,29 @@
+{
+  "name": "react-native-conductor",
+  "version": "0.0.2",
+  "description": "Move bulky Animated code from many components into a single conductor",
+  "license": "MIT",
+  "nativePackage": true,
+  "author": "Moses Gunesch <office@mosessupposes.com>",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mosesoak/react-native-conductor.git"
+  },
+  "keywords": [
+    "react-native",
+    "animation",
+    "animated",
+    "tween",
+    "utility"
+  ],
+  "bugs": {
+    "url": "https://github.com/mosesoak/react-native-conductor/issues"
+  },
+  "peerDependencies": {
+    "lodash": "^4.13.1",
+    "react": "^15.4.1",
+    "react-native": "0.40.0"
+  },
+  "devDependencies": {}
+}

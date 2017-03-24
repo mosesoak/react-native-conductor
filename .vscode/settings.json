@@ -1,0 +1,12 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "flow.enabled": false,
+    "tslint.enable": false,
+    "tslint.jsEnable": false,
+    "eslint.enable": false,
+    "typescript.validate.enable": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.formatOnPaste": true,
+    "editor.tabSize": 2
+}

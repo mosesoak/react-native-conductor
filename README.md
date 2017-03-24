@@ -1,6 +1,6 @@
 # react-native-conductor
 
-Move bulky Animated code from many components into a single conductor
+Orchestrate animations across components in one place
 
 ## Specific Problem Space Addressed
 

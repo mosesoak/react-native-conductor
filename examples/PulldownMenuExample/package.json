@@ -1,26 +1,43 @@
 {
-  "name": "PulldownMenuExample",
+  "name": "pulldown-menu-example",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "react-native-scripts": "0.0.25",
-    "jest-expo": "^0.3.0",
-    "react-test-renderer": "~15.4.1"
-  },
-  "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
     "start": "react-native-scripts start",
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "node node_modules/jest/bin/jest.js --watch"
-  },
-  "jest": {
-    "preset": "jest-expo"
+    "test": "node node_modules/jest/bin/jest.js --watch",
+    "cleanstart": "watchman watch-del-all && yarn cache clean && node node_modules/react-native start -- --reset-cache",
+    "reinstall": "rm -rf ./node_modules && watchman watch-del-all && yarn cache clean && rm -rf $TMPDIR/react-* && yarn",
+    "postpull": "yarn",
+    "lint": "eslint app lib",
+    "lint-fix": "eslint --fix app lib",
+    "link": "node node_modules/react-native link",
+    "bundle": "node node_modules/react-native bundle --entry-file=index.ios.js --bundle-output=ios/main.jsbundle --dev false",
+    "xcode": "open ios/PulldownMenuExample.xcodeproj"
   },
   "dependencies": {
     "expo": "^15.1.0",
+    "lodash": "^4.17.4",
+    "mobx": "^3.1.0",
+    "mobx-react": "^4.1.0",
     "react": "~15.4.0",
-    "react-native": "0.42.3"
+    "react-native": "0.42.3",
+    "react-native-conductor": "file:./../../"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "babel-jest": "18.0.0",
+    "babel-preset-react-native": "1.9.1",
+    "babel-preset-react-native-stage-0": "^1.0.1",
+    "eslint": "^3.15.0",
+    "eslint-plugin-react": "^6.9.0",
+    "jest-expo": "^0.3.0",
+    "react-native-scripts": "0.0.25",
+    "react-test-renderer": "~15.4.1"
+  },
+  "jest": {
+    "preset": "react-native"
   }
 }

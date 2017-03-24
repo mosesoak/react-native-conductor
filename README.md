@@ -14,7 +14,7 @@ In my workflow I found this to be about a 20% case, since not many components re
 
 ## Solution
 
-When you find yourself in that 20% case, this module makes it easy to move all your `Animated` values, interpolations, tweens and styles into a separate container. The container 'decorates' your main component with a tag:
+When you find yourself in that 20% case, this module makes it easy to move all your `Animated` values, interpolations, tweens and styles into a separate conductor. The conductor 'decorates' your main component with a tag:
 ```JSX
 <Conductor_
   animatedStyles={{
@@ -57,12 +57,12 @@ A great practice for packaging up a component is to put it in a folder and inclu
 
 - `MusicPlayer` folder, perhaps this lives in a 'shared' folder
   - `index.js`
-  - `MusicPlayerAnimations.js`
+  - `MusicPlayerConductor.js`
   - `MusicPlayerMain.js`
 
 In this example the index file would export the conductor:
 ```javascript
-export default from './MusicPlayerAnimations'
+export default from './MusicPlayerConductor'
 ```
 Then to use your component with a simple name you can just import using the folder name:
 ```javascript
@@ -72,7 +72,7 @@ The conductor and main component are now easily treated as a single unit, and if
 
 - `MusicPlayer` folder
   - `index.js`
-  - `MusicPlayerAnimations.js`
+  - `MusicPlayerConductor.js`
   - `MusicPlayerMain.js`
   - `subcomponents` folder
     - `NowPlayingDisplay.js`
@@ -84,7 +84,7 @@ The conductor and main component are now easily treated as a single unit, and if
 
 #### Nested Conductors
 
-Animation containers can be nested. This might be helfpul to:
+Animation conductors can be nested. This might be helfpul to:
 - more neatly package a subcomponent's animation with it (perhaps making it easier to break out later)
 - split up a conductor that gets too big
 
@@ -97,14 +97,14 @@ Ideally your 'smart' wrapper would live outside the the component folder, to mor
 - `MusicPlayer` folder
 - `MusicPlayerContainer.js` app-specific wrapper that imports MusicPlayer by folder
 
-## Container example
+## Conductor example
 
-In the example folder structure above, `MusicPlayerAnimations` would be structured like this:
+In the example folder structure above, `MusicPlayerConductor` would be structured like this:
 
 ```JSX
 import { Conductor_ } from 'react-native-conductor'
 
-export default class MusicPlayerAnimations extends React.Component {
+export default class MusicPlayerConductor extends React.Component {
 
   /* this is a vanilla component that you put all your animation code into */
   
@@ -141,7 +141,7 @@ export default class MusicPlayerAnimations extends React.Component {
 
   handlePlayButtonPress = () => {
     // Start some tweens!
-    // In this container, this callback should just be used to run animations.
+    // In this conductor, this callback should just be used to run animations.
     // Your main component should handle whatever the onPress actually does.
   }
 }
@@ -164,11 +164,11 @@ This pipes all animated styles you've associated with 'playButton' onto the chil
 
 You may use the same key on any number of nodes anywhere in the component tree, all of them will receive the styles for that key.
 
-Best practice note: Your decorated components should still set up their default styles using plain (non-animated) values, not rely on the styles piped in. This makes them more readable, and keeps the component renderable elsewhere. (The `AnimatedNode_` tags won't do anything if no parent container exists above them.)
+Best practice note: Your decorated components should still set up their default styles using plain (non-animated) values, not rely on the styles piped in. This makes them more readable, and keeps the component renderable elsewhere. (The `AnimatedNode_` tags won't do anything if no parent conductor exists above them.)
 
 ## Triggering Animations from Children
 
-No magic here. Your container is a plain React component; use standard techniques. (Pass a callback prop, or use an event emitter.)
+No magic here. Your conductor is a plain React component; use standard techniques. (Pass a callback prop, or use an event emitter.)
 
 ## Passing onComplete to Children
 
@@ -183,7 +183,7 @@ Child:
 ```JSX
 <AnimatedNode_ animationKey='playButton' onCallback={this.handlePlayButtonCallback}>
 ```
-Container:
+Conductor:
 ```javascript
 this.conductor.fireCallback('playButton', 'This is on complete')
 ```

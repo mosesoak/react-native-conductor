@@ -2,6 +2,8 @@
 
 Orchestrate animations across components in one place
 
+[Pulldown Menu Example](./PulldownMenuExample.gif)
+
 ## Specific Problem Space Addressed
 
 This module helps when you're using [`Animated`](https://facebook.github.io/react-native/docs/animated.html) in complex components and:

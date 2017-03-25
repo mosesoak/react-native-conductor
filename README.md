@@ -2,7 +2,7 @@
 
 Orchestrate animations across components in one place
 
-[Pulldown Menu Example](./PulldownMenuExample.gif)
+![Pulldown Menu Example](./PulldownMenuExample.gif)
 
 ## Specific Problem Space Addressed
 

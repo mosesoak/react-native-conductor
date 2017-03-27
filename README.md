@@ -2,7 +2,21 @@
 
 Orchestrate animations across components in one place
 
+## Giving `Animated` Code a Home of its Own
+
+React Native's `Animated` is great for simple to moderately complex tasks, along with the many solid JSX-based tools out there, and that covers about 80% of real-world dev cases.
+
+I developed this module to help with the other 20% – more complex cases, where I've found `Animated` doesn't scale very well. Component code gets bulky and harder to follow, and the task of coordinating animation between multiple components can be difficult.
+
+I've provided an example, a pull-down menu modeled on Airbnb, to illustrate one such case:
+
 ![Pulldown Menu Example](./PulldownMenuExample.gif)
+
+To run this example first clone this repo, `cd examples/PulldownMenuExample`, run `yarn` (or `npm i`) and then `yarn ios` (or `npm run ios`).
+
+In this example `Animated` is coordinated with a scroll value to interpolate the changes in the menu components. The menu is made up of 3 levels of nested components. `Conductor` provides a single place to put all of the `Animated` code, and acts as a provider of animated styles for all of the child components.
+
+
 
 ## Specific Problem Space Addressed
 

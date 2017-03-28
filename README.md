@@ -1,192 +1,161 @@
-# react-native-conductor
+# Conductor
 
-Move bulky Animated code from many components into a single conductor
+*Orchestrate animations across components in one place*
 
-## Specific Problem Space Addressed
+Provides an easy way to move `Animated` code into a wrapper component that feeds styles to its child components. I wrote this to address the fact that `Animated` code can get bulky and difficult to coordinate between subcomponents.
 
-This module helps when you're using [`Animated`](https://facebook.github.io/react-native/docs/animated.html) in complex components and:
-- Animation code is getting too bulky and complex
-- Subcomponent animations are hard to coordinate
+<p align="center"><img src='./conductor-diagram.png'></p>
 
-In my workflow I found this to be about a 20% case, since not many components require intensive, complex animation code. For the 80% cases like simple fades and drifts, keep using your current tools!
+The example `PulldownMenuExample` project features a collapsing nav header modeled on the Airbnb app. *(This isn't a collapsing header module! I just needed a sufficiently complex use case to illustrate `Conductor`.)*
 
-> **Real-world example:** *I helped prototype the in-run screen for a sports app, a complex component with a lot of moving parts. Its various interactive elements animated themselves and triggered animated changes to the screen, as well as needing to perform choreographed intro and outro sequences. That's a lot! Animation code quickly became entangled with component logic and harder to 'conduct' at a screen level. State management and coupling increased, and component code was no longer easy to read or update.*
+<p align="center"><img src='./PulldownMenuExample.gif'></p>
 
-## Solution
+To run the example: clone this repo, `cd examples/PulldownMenuExample`, `yarn`, `yarn ios` (or `npm i`, `npm run ios`)
 
-When you find yourself in that 20% case, this module makes it easy to move all your `Animated` values, interpolations, tweens and styles into a separate container. The container 'decorates' your main component with a tag:
-```JSX
-<Conductor_
-  animatedStyles={{
-    'playButton': this.playButtonAnimStyles,
-  }}
->
-  <YourComponent />
-</Conductor_>
-```
+## Description
 
-Views in subcomponents are then decorated with another tag that pipes in styles:
-```JSX
-<AnimatedNode_ animationKey='playButton'>
-  <Animated.View .../>
-</AnimatedNode_>
-```
+A plain wrapper component places a `Conductor_` tag around the main scene component in the example project. This empty wrapper provides a single location to set up and manage all of the `Animated` values, tweens and styles. Nested child components like the header and header menu pipe animated styles onto their views with `AnimatedNode_` tags.
 
-(more code below)
+Happily, the Conductor doesn't need to know or care about the structure of the view hierarchy, and child components only need to declare that they want styles to receive them, no extra work is required. Conductors can be nested, and can be used with a single component or a complex hierarchy.
 
-This provides a few advantages:
-- **Readability** – Your components are free of animation code. View components are clearly annotated with tags that indicate "I receive animated styles from above" and can simply declare their default non-animated style. (While it's true that you don't see which styles are piped in, this can be an advantage in that it remains entirely flexible – the responsibility has been transfered to the 'conductor'.)
+For a more detailed look at the strengths and weaknesses of this system, please read my Medium post:
 
-- **Cross-component coordination** – Timing can be managed in one place. Tweens can affect views in different nested children with no concern for tree structure.
+**[Conductor: Orchestrate Animation in React Native](https://medium.com/@moses.gunesch/conductor-orchestrate-animation-in-react-native-edd22b59ad17)**
 
-- **Playfulness** – Cutting & pasting a decorator tag from one view or component to another to apply animations is trivial, which eases the process of trying things in different ways as you build.
+Note: in future it would be nice to provide a tween-centric example, since this one just uses scroll interpolations. Using `Conductor` with tweens lets you manage all timings in one place, across any subcomponents.
 
-- **Simple mental model** – Instead of being forced to go digging, you know where to go to adjust animations.
+## Overview
 
-- **Scalability** – The reason I created this module, it keeps complex components from spiraling into a tangled mess.
+The presumed usage is **one `Conductor` per scene** or other discreet unit, not a single one for a whole app.
 
-> Possible disadvantages include:
-> - Indirection – components don't explicitly list their animations
-> - Intra-component communication required – triggering animations and receiving completion events is no longer local. (The module provides a way to talk to child components – see below.)
+A `Conductor` is just a vanilla React component that you create and name. In this example it's named `HomeConductor` since it wraps a `HomeScene` component.
 
-I've intentionally made this module as thin and hands-off as possible – it doesn't ask you to change the way you write your `Animated` code – it just gives you an easy way to condense it in one place.
-
-## Keeping Components Portable
-
-A great practice for packaging up a component is to put it in a folder and include an index file, for example:
-
-- `MusicPlayer` folder, perhaps this lives in a 'shared' folder
-  - `index.js`
-  - `MusicPlayerAnimations.js`
-  - `MusicPlayerMain.js`
-
-In this example the index file would export the conductor:
-```javascript
-export default from './MusicPlayerAnimations'
-```
-Then to use your component with a simple name you can just import using the folder name:
-```javascript
-import MusicPlayer from '../shared/MusicPlayer'
-```
-The conductor and main component are now easily treated as a single unit, and if you add subcomponents those can be neatly packaged in an additional subfolder.
-
-- `MusicPlayer` folder
-  - `index.js`
-  - `MusicPlayerAnimations.js`
-  - `MusicPlayerMain.js`
-  - `subcomponents` folder
-    - `NowPlayingDisplay.js`
-    - `Controls.js`
-      - `PlayButton.js`
-      - `BackButton.js`
-      - `ForawardButton.js`
-      - `ProgressBar.js`
-
-#### Nested Conductors
-
-Animation containers can be nested. This might be helfpul to:
-- more neatly package a subcomponent's animation with it (perhaps making it easier to break out later)
-- split up a conductor that gets too big
-
-#### Mobx or Redux Containers
-
-If you follow the (good) practice of creating a separate 'smart' container for Mobx or Redux wiring, be sure to keep it **outside** the conductor, because it doesn't directly 'belong to' the component, it belongs to the project. That means if you already have an app-specific container for your component, insert the conductor so it wraps your component directly.
-
-Ideally your 'smart' wrapper would live outside the the component folder, to more clearly reenforce this arrangement.
-
-- `MusicPlayer` folder
-- `MusicPlayerContainer.js` app-specific wrapper that imports MusicPlayer by folder
-
-## Container example
-
-In the example folder structure above, `MusicPlayerAnimations` would be structured like this:
+Put standard `Animated` code in the class, like so:
 
 ```JSX
 import { Conductor_ } from 'react-native-conductor'
+import HomeScene from './HomeScene'
 
-export default class MusicPlayerAnimations extends React.Component {
+export default class HomeConductor extends React.Component {
 
-  /* this is a vanilla component that you put all your animation code into */
+  // ... all the animationz ...
   
-  animVal = new Animated.Value(0)
-  
-  playButtonOpacity = animVal.interpolate(...)
+  // Note that React Native's docs suggest storing Animated values in state, but that is not
+  // necessary and feels like a perf risk. I suggest putting everything in the class scope.
 
-  playButtonAnimStyle = {
-    opacity: this.playButtonOpacity,
-    ...
+  headerHeight = new Animated.Value(NORMAL_HEIGHT)
+  
+  headerHeightStyle = {
+    height: this.headerHeight,
+  }
+  
+  // ... all the animation codez ...
+  
+  componentDidMount() {
+    // ... maybe start some tweens here
   }
 
-  /* ...etc. */
+  handleMenuItemPress = (index, data) => {
+    // ... maybe start a sequence on a user action, etc.
+    this.doIntroSequence()
+  }
+  
+  doIntroSequence() {
+    Animated.sequence(...).start() // etc.
+  }
+```
 
-  /*
-  Wrap your main presentation component in an Conductor_ decorator tag
-  and declare its animatedStyles, which can each be an object or an array.
-  */
+Now for the setup: 'decorate' your main component with a `Conductor_` tag that provides its animated styles by string key:
+```JSX
   render() {
     return (
       <Conductor_
         animatedStyles={{
-          'playButton': this.playButtonAnimStyle,
-          // ...and all your other styles, each with a unique key
+          'headerHeight': this.headerHeightStyle,
+          // ... and all the others – styles can be objects or arrays
         }}
       >
-        <MusicPlayer
+        <HomeScene
           {...this.props}
-          onPlayButtonPress={this.handlePlayButtonPress}
+          onScrollPositionChange={this.handleScrollPositionChange}
+          onMenuItemPress={this.handleMenuItemPress}
         />
       </Conductor_>
     )
   }
-
-  handlePlayButtonPress = () => {
-    // Start some tweens!
-    // In this container, this callback should just be used to run animations.
-    // Your main component should handle whatever the onPress actually does.
-  }
 }
-
 ```
 
 Then in any child component, no matter how deeply nested:
 ```JSX
 import { AnimatedNode_ } from 'react-native-conductor'
-
 ...
-
   <AnimatedNode_
-    animationKey='playButton'
+    animationKey='headerHeight'
   >
     <Animated.View ...etc. />
   </AnimatedNode_>
 ```
-This pipes all animated styles you've associated with 'playButton' onto the child node, which must be an Animated-enabled tag – `Animated.View`, `Animated.Image`, `Animated.Text`, or a custom component generated using `createAnimatedComponent()`.
+This pipes all animated styles you've associated with `'headerHeight'` onto the child node, which must be an Animated-enabled tag – `Animated.View`, `Animated.Image`, `Animated.Text`, or a custom component generated using `createAnimatedComponent()`.
 
-You may use the same key on any number of nodes anywhere in the component tree, all of them will receive the styles for that key.
+That's it!
 
-Best practice note: Your decorated components should still set up their default styles using plain (non-animated) values, not rely on the styles piped in. This makes them more readable, and keeps the component renderable elsewhere. (The `AnimatedNode_` tags won't do anything if no parent container exists above them.)
+A few notes about adding the `Conductor_` container:
 
-## Triggering Animations from Children
+- Your file bundle can be kept most portable by putting it in a folder, in this case named `Home`, and then including an index file that does `export { default } from './HomeConductor'`. This allows easy import using `import Home from './Home'`.
 
-No magic here. Your container is a plain React component; use standard techniques. (Pass a callback prop, or use an event emitter.)
+- If you have a 'smart' container for Redux or Mobx wiring around your component, *don't* put the Conductor around that wrapper! A Conductor 'belongs to' the presentation component and should wrap it directly. A smart container doesn't really belong in the component folder at all, since it's app-specific.
 
-## Passing onComplete to Children
+And a few notes about animated styles:
 
-Since animation code is now decoupled, it's a little harder to fire an onComplete in a child component. To keep your code more pure, I chose not to add constraints around how `Animated` tweens are written, so this module doesn't have a way to automate this process.
+- `AnimatedNode_` tags clearly annotate that a view receives styles from above, but you don't see which animated styles are piped in. This might feel like a limitation, but it can be an advantage in that it retains flexibility.
 
-Two ways to deal with this are:
+- Animated views should still declare their default (non-animated) styles. This ensures your component will render correctly without its `Conductor`. It can also be more easily used with a different `Conductor`.
 
-1. Use an event emitter and listen in the child
-2. Use the imperitive `fireCallback` hook provided by this module
+## Communication with a Conductor
+
+You'll need to communicate to and from a Conductor when:
+- you want to start animations in the conductor
+- you want to know when animations are complete in children
+
+*A straightforward solution is to use an event emitter.*
+
+If you prefer to use callbacks, talking from children up to the `Conductor` is a standard process, as illustrated by `onMenuItemPress` in the example code above. To talk back to child components from a Conductor, e.g. onComplete, an imperative `fireCallback` hook is provided:
 
 Child:
 ```JSX
-<AnimatedNode_ animationKey='playButton' onCallback={this.handlePlayButtonCallback}>
+<AnimatedNode_
+  animationKey='headerHeight'
+  onCallback={this.handleHeaderHeightCallback}
+>
 ```
-Container:
-```javascript
-this.conductor.fireCallback('playButton', 'This is on complete')
+Conductor:
+```JSX
+<Conductor_
+  animatedStyles={{ headerHeight: this.headerHeightStyle }}
+  ref={(r) => { this.conductor = r }}
+/>
+...
+Animated.timing(this.headerHeight, {...}, () => {
+  this.conductor.fireCallback('headerHeight', 'This is on complete')
+})
 ```
-Where `this.conductor` is a ref that you set on your `Conductor_` node, `'playButton'` indicates which child node to send the callback to using a key from its `animatedStyles` list, `'This is on complete'` and any additional arguments are passed to the callback, and at least one child `AnimatedNode_` declares an `onCallback` prop.
+Where `this.conductor` is a `ref` that you set on your `Conductor_` node, `'headerHeight'` indicates which child node to send the callback to using a key from its `animatedStyles` list, `'This is on complete'` and any additional arguments are passed to the callback, and at least one child `AnimatedNode_` declares an `onCallback` prop.
 
-It's called `onCallback`, not `onComplete`, since this is just an imperitive function-call mechanism that can be used at any time. For example it could be called on animation-start, or after a timeout.
+It's called `onCallback`, not `onComplete`, since this is just a function-call mechanism that can be used at any time. For example it could be called on animation-start, or after a timeout.
+
+## Nested Conductors
+
+Conductors can be nested. This enables you to break your animation code into more manageable chunks, or separate a subcomponent's animations into a discreet package to make it more portable.
+
+## Other Animation Libs
+
+`Conductor` doesn't intend to replace other solutions – there are quite a few excellent JSX-based animation libraries on the market that can handle most simple and even moderately-complex cases. Continue to use those! `Conductor` is best for substantial components with a lot of `Animated` code. Other libraries almost always use `Animated` as well, making it safe and efficient to mix: use JSX-based animations when you can, then break out a Conductor to help you organize your code when you use `Animated`.
+
+## Thanks
+
+Conductor was created for my work at [Instrument](http://instrument.com). Special thanks to their management for being cool enough to encourage their developers to release open source work! And to the FUN dev team for their help and inspiration.
+
+I wrote `Conductor` to help in my own work, and I hope it helps yours!
+
+More info: **[Conductor: Orchestrate Animation in React Native](https://medium.com/@moses.gunesch/conductor-orchestrate-animation-in-react-native-edd22b59ad17)**

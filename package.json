@@ -1,6 +1,6 @@
 {
   "name": "react-native-conductor",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Move bulky Animated code from many components into a single conductor",
   "license": "MIT",
   "nativePackage": true,

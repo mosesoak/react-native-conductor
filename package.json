@@ -1,7 +1,7 @@
 {
   "name": "react-native-conductor",
-  "version": "1.0.2",
-  "description": "Move bulky Animated code from many components into a single conductor",
+  "version": "1.0.3",
+  "description": "Orchestrate animations across components in one place",
   "license": "MIT",
   "nativePackage": true,
   "author": "Moses Gunesch <office@mosessupposes.com>",

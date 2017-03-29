@@ -34,9 +34,6 @@ export default class HomeScene extends React.Component {
     topMenuTitle: PropTypes.string,
   }
 
-  static defaultProps = {
-  }
-
   scrollY = -NORMAL_HEIGHT
   scrollingUp = false
 

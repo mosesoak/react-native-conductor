@@ -72,6 +72,7 @@ export default class PulldownHeader extends React.Component {
             topMenuData={this.props.topMenuData}
           />
 
+          {/* Close button */}
           <TouchableWithoutFeedback
             onPress={this.handleMenuItemPress}
           >
@@ -79,13 +80,13 @@ export default class PulldownHeader extends React.Component {
               animationKey='arrow'
             >
               <Animated.Image
-                source={require('images/up-arrow.png')}
                 style={styles.arrow}
+                source={require('images/up-arrow.png')}
               />
             </AnimatedNode_>
           </TouchableWithoutFeedback>
 
-          {
+          { // Title item in normal state
             !this.props.isExpanded &&
             <AnimatedNode_
               animationKey='normalHeaderTitle'
@@ -100,6 +101,8 @@ export default class PulldownHeader extends React.Component {
               </Animated.View>
             </AnimatedNode_>
           }
+
+          {/* fake tab bar at bottom of header */}
           <View
             style={styles.tabContainer}
           >
@@ -138,12 +141,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'transparent',
+    marginHorizontal: 20,
   },
   tabTitle: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 12,
-    marginHorizontal: 20,
   },
   arrow: {
     position: 'absolute',

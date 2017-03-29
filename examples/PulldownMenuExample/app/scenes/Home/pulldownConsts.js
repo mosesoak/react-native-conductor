@@ -1,8 +1,8 @@
 import { Dimensions } from 'react-native'
 
-export const {
-  height: deviceHeight,
+const {
   width: deviceWidth,
+  height: deviceHeight,
 } = Dimensions.get('window')
 
 const TOP_PART = 80
@@ -22,8 +22,8 @@ export const STYLES = {
     position: 'absolute',
     overflow: 'hidden',
     top: 0,
-    right: 0,
     left: 0,
+    width: deviceWidth,
     height: SIZES.NORMAL_HEIGHT,
     backgroundColor: 'white',
   },

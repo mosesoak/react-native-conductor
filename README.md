@@ -27,6 +27,8 @@ Note: in future it would be nice to provide a tween-centric example, since this 
 
 ## Overview
 
+`yarn add react-native-conductor` (or `npm install conductor --save`)
+
 The presumed usage is **one `Conductor` per scene** or other discreet unit, not a single one for a whole app.
 
 A `Conductor` is just a vanilla React component that you create and name. In this example it's named `HomeConductor` since it wraps a `HomeScene` component.

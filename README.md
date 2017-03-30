@@ -25,9 +25,13 @@ For a more detailed look at the strengths and weaknesses of this system, please 
 
 Note: in future it would be nice to provide a tween-centric example, since this one just uses scroll interpolations. Using `Conductor` with tweens lets you manage all timings in one place, across any subcomponents.
 
-## Overview
+## Install
 
-`yarn add react-native-conductor` (or `npm install conductor --save`)
+`yarn add react-native-conductor`
+or
+`npm install react-native-conductor --save`
+
+## Overview
 
 The presumed usage is **one `Conductor` per scene** or other discreet unit, not a single one for a whole app.
 

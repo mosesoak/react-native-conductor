@@ -1,5 +1,6 @@
-# Conductor
+![Conductor](./conductor-logo-small.png)
 
+# Conductor
 *Orchestrate animations across components in one place*
 
 Provides an easy way to move `Animated` code into a wrapper component that feeds styles to its child components. I wrote this to address the fact that `Animated` code can get bulky and difficult to coordinate between subcomponents.

@@ -5,11 +5,11 @@
 
 Provides an easy way to move `Animated` code into a wrapper component that feeds styles to its child components. I wrote this to address the fact that `Animated` code can get bulky and difficult to coordinate between subcomponents.
 
-<p align="center"><img src='./conductor-diagram.png'></p>
+![Conductor Diagram](./conductor-diagram.png)
 
 The example `PulldownMenuExample` project features a collapsing nav header modeled on the Airbnb app. *(This isn't a collapsing header module! I just needed a sufficiently complex use case to illustrate `Conductor`.)*
 
-<p align="center"><img src='./PulldownMenuExample.gif'></p>
+![Pulldown Menu Example](./PulldownMenuExample.gif)
 
 To run:
 - clone this repo

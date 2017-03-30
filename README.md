@@ -120,6 +120,11 @@ That's it!
 
 - Only one set of styles can be indicated with `animationKey`, but an array of styles may be passed for any key.
 
+## Known Issues
+
+- If you're decorating a custom component, be sure to use a clone of it made with `Animated.createAnimatedComponent`.
+- Touchable elements like `TouchableOpacity` can conflict with `AnimatedNode_` if you're trying to animate `opacity` on the child node. To work around this, add an extra `Animated.View` around the touchable element.
+
 ## Communication with a Conductor
 
 Child nodes need a way to start animations, and to receive on-complete callbacks. There are two ways to solve this:

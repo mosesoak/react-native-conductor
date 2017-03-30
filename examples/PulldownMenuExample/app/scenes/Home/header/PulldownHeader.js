@@ -4,17 +4,15 @@ import {
   StyleSheet,
   Animated,
   View,
-  Image,
-  TouchableWithoutFeedback,
-  Text,
 } from 'react-native'
 
-import { SIZES, STYLES } from './../pulldownConsts'
+import { STYLES } from './../pulldownConsts'
 
 import { AnimatedNode_ } from 'react-native-conductor'
 
 import PulldownHeaderMenu from './PulldownHeaderMenu'
-import HeaderListItem from './HeaderListItem'
+import { AnimatedHeaderListItem } from 'shared/HeaderListItem'
+import { AnimatedImageButton } from 'shared/ImageButton'
 
 /**
  * This child component receives animated styles from HomeConductor.
@@ -25,20 +23,17 @@ import HeaderListItem from './HeaderListItem'
 export default class PulldownHeader extends React.Component {
 
   static propTypes = {
+    headerExpanded: PropTypes.bool.isRequired,
     topMenuData: PropTypes.array.isRequired,
+    topMenuTitle: PropTypes.string.isRequired,
 
-    isExpanded: PropTypes.bool,
     onClosePress: PropTypes.func,
     onMenuItemPress: PropTypes.func,
     onOpenPress: PropTypes.func,
-    topMenuTitle: PropTypes.string,
-  }
-
-  static defaultProps = {
   }
 
   handleMenuTogglePress = () => {
-    if (this.props.isExpanded) {
+    if (this.props.headerExpanded) {
       this.props.onClosePress && this.props.onClosePress()
     }
     else {
@@ -50,12 +45,12 @@ export default class PulldownHeader extends React.Component {
     this.props.onMenuItemPress && this.props.onMenuItemPress(index, data)
   }
 
-  /**
-   * Example of communication from the conductor back to a child (e.g. onComplete).
-   * See HomeConductor for more.
-   */
-  handleHeaderHeightCallback = (...args) => {
-    console.log('headerHeight callback fired! args=' + args.join('  '))
+  handleHeaderHeightCallback = (message) => {
+    /**
+     * Example of communication from the conductor back to a child (e.g. onComplete).
+     * See HomeConductor for more.
+     */
+    console.log(`headerHeight callback fired! message: ${message}`)
   }
 
   render() {
@@ -64,8 +59,9 @@ export default class PulldownHeader extends React.Component {
         animationKey='headerHeight'
         onCallback={this.handleHeaderHeightCallback}
       >
-        <Animated.View
+        <Animated.Image
           style={styles.container}
+          source={require('images/menu-bg.png')}
         >
           <PulldownHeaderMenu
             onMenuItemPress={this.handleMenuItemPress}
@@ -73,36 +69,31 @@ export default class PulldownHeader extends React.Component {
           />
 
           {/* Close button */}
-          <TouchableWithoutFeedback
-            onPress={this.handleMenuItemPress}
+          <AnimatedNode_
+            animationKey='arrow'
           >
-            <AnimatedNode_
-              animationKey='arrow'
-            >
-              <Animated.Image
-                style={styles.arrow}
-                source={require('images/up-arrow.png')}
-              />
-            </AnimatedNode_>
-          </TouchableWithoutFeedback>
+            <AnimatedImageButton
+              onPress={this.handleMenuItemPress}
+              source={require('images/up-arrow.png')}
+              style={styles.arrow}
+            />
+          </AnimatedNode_>
 
-          { // Title item in normal state
-            !this.props.isExpanded &&
+          {/* Title item at normal size */}
+          {
+            !this.props.headerExpanded &&
             <AnimatedNode_
               animationKey='normalHeaderTitle'
             >
-              <Animated.View
-                style={{ backgroundColor: 'transparent' }}
-              >
-                <HeaderListItem
-                  onPress={this.handleMenuTogglePress}
-                  text={this.props.topMenuTitle}
-                />
-              </Animated.View>
+              <AnimatedHeaderListItem
+                style={styles.normalHeaderTitle}
+                onPress={this.handleMenuTogglePress}
+                text={this.props.topMenuTitle}
+              />
             </AnimatedNode_>
           }
 
-          {/* fake tab bar at bottom of header */}
+          {/* Fake tab bar at bottom of header */}
           <View
             style={styles.tabContainer}
           >
@@ -121,7 +112,7 @@ export default class PulldownHeader extends React.Component {
               ))
             }
           </View>
-        </Animated.View>
+        </Animated.Image>
       </AnimatedNode_ >
     )
   }
@@ -130,6 +121,12 @@ export default class PulldownHeader extends React.Component {
 const styles = StyleSheet.create({
   container: {
     ...STYLES.HEADER_CONTAINER,
+  },
+  normalHeaderTitle: {
+    position: 'absolute',
+    top: 30,
+    left: 0,
+    right: 0,
   },
   tabContainer: {
     position: 'absolute',

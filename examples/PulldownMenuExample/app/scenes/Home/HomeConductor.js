@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   Animated,
-  Easing,
 } from 'react-native'
 
 import { clamp } from 'lodash'
@@ -16,7 +15,6 @@ const {
   EXPANDED_HEIGHT,
   NORMAL_HEIGHT,
   COLLAPSED_HEIGHT,
-  FULL_HEIGHT,
 } = SIZES
 const EXPANDED_DIST = EXPANDED_HEIGHT - NORMAL_HEIGHT
 const MENU_ITEM_DRIFT = 5
@@ -60,7 +58,7 @@ export default class HomeConductor extends React.Component {
 
   normalHeaderTitleTranslateY = this.headerHeight.interpolate({
     inputRange: [COLLAPSED_HEIGHT, NORMAL_HEIGHT, NORMAL_HEIGHT + (EXPANDED_DIST * 0.5)],
-    outputRange: [30, 30, 70],
+    outputRange: [0, 0, 40],
     extrapolate: 'clamp',
   })
 
@@ -84,7 +82,7 @@ export default class HomeConductor extends React.Component {
     extrapolate: 'clamp',
   })
 
-  expandedHeaderItem1TranslateY = this.headerHeight.interpolate({
+  expandedHeaderItem1MarginTop = this.headerHeight.interpolate({
     inputRange: [NORMAL_HEIGHT + (EXPANDED_DIST * 0.2), NORMAL_HEIGHT + (EXPANDED_DIST * 0.6), EXPANDED_HEIGHT],
     outputRange: [-35, 0, 0],
     extrapolate: 'clamp',
@@ -96,7 +94,7 @@ export default class HomeConductor extends React.Component {
     extrapolate: 'clamp',
   })
 
-  expandedHeaderItem2TranslateY = this.headerHeight.interpolate({
+  expandedHeaderItem2MarginTop = this.headerHeight.interpolate({
     inputRange: [NORMAL_HEIGHT + (EXPANDED_DIST * 0.4), NORMAL_HEIGHT + (EXPANDED_DIST * 0.8), EXPANDED_HEIGHT],
     outputRange: [-MENU_ITEM_DRIFT, 0, 0],
     extrapolate: 'clamp',
@@ -108,7 +106,7 @@ export default class HomeConductor extends React.Component {
     extrapolate: 'clamp',
   })
 
-  expandedHeaderItem3TranslateY = this.headerHeight.interpolate({
+  expandedHeaderItem3MarginTop = this.headerHeight.interpolate({
     inputRange: [NORMAL_HEIGHT + (EXPANDED_DIST * 0.6), EXPANDED_HEIGHT, EXPANDED_HEIGHT],
     outputRange: [-MENU_ITEM_DRIFT, 0, 0],
     extrapolate: 'clamp',
@@ -130,7 +128,7 @@ export default class HomeConductor extends React.Component {
 
   normalHeaderTitleStye = {
     opacity: this.normalHeaderTitleOpacity,
-    marginTop: this.normalHeaderTitleTranslateY,
+    transform: [{ translateY: this.normalHeaderTitleTranslateY }],
   }
 
   arrowStyle = {
@@ -140,17 +138,17 @@ export default class HomeConductor extends React.Component {
 
   expandedHeaderItem1Style = {
     opacity: this.expandedHeaderItem1Opacity,
-    marginTop: this.expandedHeaderItem1TranslateY,
+    marginTop: this.expandedHeaderItem1MarginTop,
   }
 
   expandedHeaderItem2Style = {
     opacity: this.expandedHeaderItem2Opacity,
-    marginTop: this.expandedHeaderItem2TranslateY,
+    marginTop: this.expandedHeaderItem2MarginTop,
   }
 
   expandedHeaderItem3Style = {
     opacity: this.expandedHeaderItem3Opacity,
-    marginTop: this.expandedHeaderItem3TranslateY,
+    marginTop: this.expandedHeaderItem3MarginTop,
   }
 
   // --methods--
@@ -159,7 +157,7 @@ export default class HomeConductor extends React.Component {
     this.headerHeight.setValue(clamp(value, COLLAPSED_HEIGHT, EXPANDED_HEIGHT))
   }
 
-  handleMenuItemPress = (index, data) => {
+  handleMenuItemPress = () => {
     // To talk to children, e.g. when an animation completes, you can use an event
     // emitter, or this imperitive hook that lets you fire a callback by style key.
     // Note that you need to set a ref on the Conductor_ node to use this.

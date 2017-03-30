@@ -18,10 +18,10 @@ export default class HomeContainer extends React.Component {
   render() {
     return (
       <Home
-        isExpanded={PulldownMenuState.headerExpanded}
+        headerExpanded={PulldownMenuState.headerExpanded}
         topMenuTitle={PulldownMenuState.topMenuTitle}
         topMenuData={PulldownMenuState.topMenuData}
-        setHeaderExpanded={PulldownMenuState.setHeaderExpanded}
+        setHeaderExpanded={(value) => PulldownMenuState.setHeaderExpanded(value)}
       />
     )
   }

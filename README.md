@@ -1,5 +1,6 @@
-# Conductor
+![Conductor](./conductor-logo-small.png)
 
+# Conductor
 *Orchestrate animations across components in one place*
 
 Provides an easy way to move `Animated` code into a wrapper component that feeds styles to its child components. I wrote this to address the fact that `Animated` code can get bulky and difficult to coordinate between subcomponents.
@@ -23,6 +24,12 @@ For a more detailed look at the strengths and weaknesses of this system, please 
 **[Conductor: Orchestrate Animation in React Native](https://medium.com/@moses.gunesch/conductor-orchestrate-animation-in-react-native-edd22b59ad17)**
 
 Note: in future it would be nice to provide a tween-centric example, since this one just uses scroll interpolations. Using `Conductor` with tweens lets you manage all timings in one place, across any subcomponents.
+
+## Install
+
+`yarn add react-native-conductor`
+or
+`npm install react-native-conductor --save`
 
 ## Overview
 

@@ -3,23 +3,19 @@
 # Conductor
 *Orchestrate animations across components in one place*
 
-Provides an easy way to move `Animated` code into a wrapper component that feeds styles to its child components. I wrote this to address the fact that `Animated` code can get bulky and difficult to coordinate between subcomponents.
-
-Conductor is not a new animation syntax, it is a way to organize your code to make `Animated` easier to work with.
+Not a new animation syntax, but a way to organize your code to make `Animated` easier to work with. Animation code is condensed into a wrapper component that feeds `Animated` styles to its children.
 
 ![Conductor Diagram](./conductor-diagram.png)
 
+I wrote this to address the fact that `Animated` code can get bulky and difficult to coordinate between subcomponents.
+
 ## Install
 
-`yarn add react-native-conductor`
-
-or
-
-`npm install react-native-conductor --save`
+`yarn add react-native-conductor` - or - `npm install --save react-native-conductor`
 
 ## Example
 
-The included `PulldownMenuExample` project features a collapsing nav header modeled on the Airbnb app. *(This isn't a collapsing header module! I just needed a sufficiently complex use case to illustrate `Conductor`.)*
+The included `PulldownMenuExample` project features a collapsing nav header modeled on the Airbnb app. *(This isn't a collapsing header module! I just needed a sufficiently complex use case to illustrate Conductor.)*
 
 ![Pulldown Menu Example](./PulldownMenuExample.gif)
 
@@ -103,11 +99,6 @@ That's it!
 
 - Only one set of styles can be indicated with `animationKey`, but an array of styles may be passed for any key.
 
-## Known Issues
-
-- If you're decorating a custom component, be sure to use a clone of it made with `Animated.createAnimatedComponent`.
-- Touchable elements like `TouchableOpacity` can conflict with `AnimatedNode_` if you're trying to animate `opacity` on the child node. To work around this, add an extra `Animated.View` around the touchable element.
-
 ## Communication with a Conductor
 
 Child nodes need a way to start animations, and to receive on-complete callbacks. There are two ways to solve this:
@@ -150,7 +141,7 @@ Conductors can be nested. This enables you to break your animation code into mor
 
 ## Other Animation Libs
 
-This module doesn't intend to replace other solutions (e.g. JSX-based libs), and can be used in tandem with those efficiently since everyone uses `Animated`. Use JSX for fades and other basics; use Conductor when there's `Animated` code and separating that out will improve readability.
+This module doesn't intend to replace other solutions (e.g. JSX-based libs), and can be used in tandem with those efficiently since everyone uses `Animated`. Use JSX for fades and drifts; use Conductor when you turn to `Animated` for the more complex cases.
 
 ## Thanks
 

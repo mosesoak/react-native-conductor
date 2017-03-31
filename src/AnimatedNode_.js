@@ -9,7 +9,7 @@ import {
 } from './conductorConstants'
 
 
-export default class AnimatedNode_ extends React.Component {
+class AnimatedNode_ extends React.Component {
   static propTypes = {
     animationKey: PropTypes.string.isRequired,
     children: PropTypes.element.isRequired,
@@ -45,7 +45,7 @@ export default class AnimatedNode_ extends React.Component {
 
   render() {
     const Child = React.Children.only(this.props.children)
-    let propsToPass = {
+    const propsToPass = {
       ...Child.props,
       ...this.props,
       children: Child.props.children,
@@ -53,35 +53,44 @@ export default class AnimatedNode_ extends React.Component {
     delete propsToPass[animationKey]
     delete propsToPass.onCallback
     const childStyle = StyleSheet.flatten(Child.props.style) || {}
+    const hasThisStyle = this.props.style != null
+    const thisStyle = hasThisStyle ? StyleSheet.flatten(this.props.style) : {}
     const { animationKey: key } = this.props
     let animStyles = key && this.context[animatedStyles]
       ? this.context[animatedStyles][key]
       : null
     animStyles = StyleSheet.flatten(animStyles) || {}
-
-    if (animStyles) {
-      propsToPass = {
-        ...propsToPass,
-        style: {
-          ...childStyle,
-          ...animStyles,
-        },
-      }
+    const stylesToPass = {
+      ...childStyle,
+      ...animStyles,
+      ...thisStyle,
     }
 
-    // Handle edge case where another component passed a conflicting style onto this AnimatedNode_.
-    // (In most cases AnimatedNode_ should wrap an Animated element, so we can avoid adding an extra View.)
-    const thisStyle = StyleSheet.flatten(this.props.style) || {}
-    if (Object.keys(thisStyle).find((name) => (propsToPass.style[name] != null))) {
+    // Workaround for wrapping a Touchable: apply styles to a wrapper view. (Not ideal but usually works)
+    if (Child.type.displayName && Child.type.displayName.includes('Touchable')) {
       return (
-        <Animated.View style={thisStyle}>
-          {React.cloneElement(Child, propsToPass)}
-        </Animated.View>
+        <Animated.View
+          style={stylesToPass}
+        >
+          {
+            React.cloneElement(Child, {
+              ...propsToPass,
+              style: {},
+            })
+          }
+        </Animated.View >
       )
     }
 
+    // All normal cases
     return (
-      React.cloneElement(Child, propsToPass)
+      React.cloneElement(Child, {
+        ...propsToPass,
+        style: stylesToPass,
+      })
     )
   }
 }
+
+// Workaround for case where a parent node is also trying to animate our child node
+export default Animated.createAnimatedComponent(AnimatedNode_)

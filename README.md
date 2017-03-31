@@ -5,20 +5,9 @@
 
 Provides an easy way to move `Animated` code into a wrapper component that feeds styles to its child components. I wrote this to address the fact that `Animated` code can get bulky and difficult to coordinate between subcomponents.
 
+Conductor is not a new animation syntax, it is a way to organize your code to make `Animated` easier to work with.
+
 ![Conductor Diagram](./conductor-diagram.png)
-
-The example `PulldownMenuExample` project features a collapsing nav header modeled on the Airbnb app. *(This isn't a collapsing header module! I just needed a sufficiently complex use case to illustrate `Conductor`.)*
-
-![Pulldown Menu Example](./PulldownMenuExample.gif)
-
-To run:
-- clone this repo
-- cd into the repo and then `cd examples/PulldownMenuExample`
-- run `yarn`, then `yarn ios` to start (or `npm i`, `npm run ios`)
-
-## Description
-
-A plain wrapper component places a `Conductor_` tag around the main scene component in the example project. This empty wrapper provides a single location to set up and manage all of the `Animated` values, tweens and styles. Nested child components like the header and header menu pipe animated styles onto their views with `AnimatedNode_` tags. Happily, the Conductor doesn't need to know or care about the structure of the view hierarchy, and child components only need to declare that they want styles to receive them, no extra work is required. Please read my [Medium post](#medium-post) for more.
 
 ## Install
 
@@ -28,13 +17,22 @@ or
 
 `npm install react-native-conductor --save`
 
-## Overview
+## Example
 
-The presumed usage is **one Conductor per scene or component group,** not a single one for a whole app. Conductors can be nested.
+The included `PulldownMenuExample` project features a collapsing nav header modeled on the Airbnb app. *(This isn't a collapsing header module! I just needed a sufficiently complex use case to illustrate `Conductor`.)*
 
-Start by creating a standard React component, here it's named `HomeConductor` since it wraps a `HomeScene` component.
+![Pulldown Menu Example](./PulldownMenuExample.gif)
 
-This class will house your `Animated` code:
+To run:
+- clone this repo
+- cd into the repo and then `cd examples/PulldownMenuExample`
+- run `yarn`, then `yarn ios` to start (or `npm i`, `npm run ios`)
+
+## Docs
+
+The presumed usage is **one Conductor per scene or component group,** not a single one for a whole app. Conductors can be nested, so subcomponents can have their own as needed.
+
+This example is a vanilla React component class named `HomeConductor` that wraps a `HomeScene` component. This class houses all of your `Animated` code.
 
 ```JSX
 import { Conductor_ } from 'react-native-conductor'
@@ -43,29 +41,12 @@ import HomeScene from './HomeScene'
 export default class HomeConductor extends React.Component {
 
   // ... all the animationz ...
-  
-  // Note that React Native's docs suggest storing Animated values in state, but that is not
-  // necessary and feels like a perf risk. I suggest putting everything in the class scope.
-
   headerHeight = new Animated.Value(NORMAL_HEIGHT)
-  
-  headerHeightStyle = {
-    height: this.headerHeight,
-  }
-  
-  // ... all the animation codez ...
-  
-  componentDidMount() {
-    // ... maybe start some tweens here
-  }
+  headerHeightStyle = { height: this.headerHeight }
 
   handleMenuItemPress = (index, data) => {
-    // ... maybe start a sequence on a user action, etc.
+   // ... trigger some animation on a user action, etc.
     this.doIntroSequence()
-  }
-  
-  doIntroSequence() {
-    Animated.sequence(...).start() // etc.
   }
 ```
 
@@ -101,6 +82,8 @@ import { AnimatedNode_ } from 'react-native-conductor'
   </AnimatedNode_>
 ```
 This pipes all animated styles you've associated with `'headerHeight'` onto any child node, which must be an Animated-enabled tag – `Animated.View`, `Animated.Image`, `Animated.Text`, or a custom component generated using `createAnimatedComponent()`.
+
+Happily, the Conductor doesn't need to know or care about the structure of the view hierarchy, and child components only need to declare that they want styles to receive them, no extra work is required. Please read my [Medium post](#medium-post) for more.
 
 That's it!
 

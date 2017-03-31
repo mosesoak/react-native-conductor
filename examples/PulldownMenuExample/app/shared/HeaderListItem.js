@@ -1,6 +1,9 @@
 import React, { PropTypes } from 'react'
 import { View, Text, TouchableOpacity, Animated } from 'react-native'
 
+// Custom components need to be cloned using createAnimatedComponent() in order to be animated directly.
+// (see the last line in this file)
+
 export default class HeaderListItem extends React.Component {
   static propTypes = {
     onPress: PropTypes.func.isRequired,
@@ -12,7 +15,6 @@ export default class HeaderListItem extends React.Component {
 
   render() {
     return (
-      // Currently you need to wrap Touchable elements in an extra View when opacity will be animated.
       <View
         style={this.props.style}
       >
@@ -51,5 +53,4 @@ export default class HeaderListItem extends React.Component {
   }
 }
 
-// Custom components need to be cloned like this before wrapping them in an AnimatedNode_
 export const AnimatedHeaderListItem = Animated.createAnimatedComponent(HeaderListItem)

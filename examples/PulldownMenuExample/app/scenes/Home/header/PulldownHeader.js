@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Animated,
   View,
+  TouchableOpacity,
 } from 'react-native'
 
 import { STYLES } from './../pulldownConsts'
@@ -12,7 +13,6 @@ import { AnimatedNode_ } from 'react-native-conductor'
 
 import PulldownHeaderMenu from './PulldownHeaderMenu'
 import { AnimatedHeaderListItem } from 'shared/HeaderListItem'
-import { AnimatedImageButton } from 'shared/ImageButton'
 
 /**
  * This child component receives animated styles from HomeConductor.
@@ -72,11 +72,15 @@ export default class PulldownHeader extends React.Component {
           <AnimatedNode_
             animationKey='arrow'
           >
-            <AnimatedImageButton
-              onPress={this.handleMenuItemPress}
-              source={require('images/up-arrow.png')}
+            <TouchableOpacity
               style={styles.arrow}
-            />
+              onPress={this.handleMenuItemPress}
+              activeOpacity={0.8}
+            >
+              <Image
+                source={require('images/up-arrow.png')}
+              />
+            </TouchableOpacity>
           </AnimatedNode_>
 
           {/* Title item at normal size */}

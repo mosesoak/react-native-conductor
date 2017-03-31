@@ -57,7 +57,7 @@ export default class Conductor_ extends React.Component {
 
   fireCallback = (animationKey, ...args) => {
     const list = this.callbacks[animationKey] ? Object.values(this.callbacks[animationKey]) : []
-    if (list.length > 0) {
+    if (list.length) {
       list.forEach(onCallback => onCallback(...args))
     }
     else {

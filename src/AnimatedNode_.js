@@ -82,7 +82,6 @@ class AnimatedNode_ extends React.Component {
       )
     }
 
-    // All normal cases
     return (
       React.cloneElement(Child, {
         ...propsToPass,
@@ -92,5 +91,5 @@ class AnimatedNode_ extends React.Component {
   }
 }
 
-// Workaround for case where a parent node is also trying to animate our child node
+// Workaround for case where a parent node wants to clone & animate this node
 export default Animated.createAnimatedComponent(AnimatedNode_)

@@ -1,6 +1,6 @@
 {
   "name": "react-native-conductor",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Orchestrate animations across components in one place",
   "license": "MIT",
   "nativePackage": true,

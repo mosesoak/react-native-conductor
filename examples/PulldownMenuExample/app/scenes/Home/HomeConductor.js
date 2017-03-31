@@ -32,6 +32,10 @@ export default class HomeConductor extends React.Component {
 
   conductor = null // see <Conductor_> ref
 
+    
+  // Note that React Native's docs suggest storing Animated values in state, but that is not
+  // necessary and feels like a perf risk. I suggest putting everything in the class scope.
+
   // --Animated values--
 
   headerHeight = new Animated.Value(NORMAL_HEIGHT)

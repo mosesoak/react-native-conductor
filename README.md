@@ -145,7 +145,7 @@ This module doesn't intend to replace other solutions (e.g. JSX-based libs), and
 
 ## Thanks
 
-Conductor was created for my work at [Instrument](http://instrument.com). Special thanks to their management for being cool enough to encourage their developers to release open source work! And to the FUN dev team for their help and inspiration.
+Conductor was created for my work at [Instrument](http://instrument.com). Special thanks to their management for being cool enough to encourage their developers to release open source work! Big thanks also to [@kylpo](https://github.com/kylpo) and the FUN dev team for their help and inspiration.
 
 ## Medium Post
 
